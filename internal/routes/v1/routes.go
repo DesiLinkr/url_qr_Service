@@ -1,16 +1,19 @@
 package v1
 
 import (
+	controller "qr_url_service/internal/controllers/v1"
+	"qr_url_service/internal/services"
+
 	"github.com/gin-gonic/gin"
-	// "qr_url_service/internal/handlers"
 )
 
 func RegisterRoutes(rg *gin.RouterGroup) {
 
-	
-	// url := rg.Group("/url")
+	urlService := services.NewURLService()
+
+	urlController := controller.NewURLController(urlService)
+	url := rg.Group("/url")
 	{
-		// url.POST("/shorten", handlers.CreateShortURL)
-		// url.GET("/:code", handlers.RedirectURL)
+		url.POST("/shorten", urlController.CreateShortURL)
 	}
 }
