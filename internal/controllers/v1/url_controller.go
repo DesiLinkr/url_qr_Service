@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	schema_v1 "qr_url_service/internal/schema/v1"
 	"qr_url_service/internal/services"
 )
 
@@ -20,22 +21,19 @@ func NewURLController(urlService *services.URLService) *URLController {
 
 func (u *URLController) CreateShortURL(c *gin.Context) {
 
-	// read request
-	var req struct {
-		URL string `json:"url"`
-	}
+	var req schema_v1.ShortURLRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid request",
+			"error": err.Error(),
 		})
 		return
 	}
 
-	shortURL := "abc123"
+	shortCode := u.urlService.GenerateShortURL(req.URL)
 
 	c.JSON(http.StatusOK, gin.H{
-		"short_url": shortURL,
+		"short_code": shortCode,
 	})
 
 }
